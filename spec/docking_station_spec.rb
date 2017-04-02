@@ -22,12 +22,20 @@ describe DockingStation do
 
     it { is_expected.to respond_to :release_bike } # one-liner syntax
 
+    let(:bike) { double :bike, working?: true }
     it "releases working bikes" do
-      bike = Bike.new
-      expect(bike).to be_working
+      subject.dock(bike)
+      released_bike = subject.release_bike
+      expect(released_bike).to be_working
     end
 
     it "raises error when there are no bikes available" do
+      expect { subject.release_bike }.to raise_error "No bikes available"
+    end
+
+    it "does not release broken bikes" do
+      bike = double(:bike, working?: false)
+      subject.dock(bike)
       expect { subject.release_bike }.to raise_error "No bikes available"
     end
   end

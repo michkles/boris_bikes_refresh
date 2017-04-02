@@ -9,8 +9,8 @@ class DockingStation
   end
 
   def release_bike
-    fail 'No bikes available' if empty?
-    @bikes.pop
+    fail 'No bikes available' if empty? || !working_bikes_any
+    @bikes.delete(working_bikes_only.first)
   end
 
   def dock(bike)
@@ -26,5 +26,13 @@ class DockingStation
 
   def empty?
     @bikes.empty?
+  end
+
+  def working_bikes_any
+    @bikes.any? { |bike| bike.working? }
+  end
+
+  def working_bikes_only
+    @bikes.select { |bike| bike.working? }
   end
 end
